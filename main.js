@@ -1,3 +1,5 @@
+Vue.config.devtools = true
+
 Vue.component('product-details', {
     props: {
         details: {
@@ -52,10 +54,6 @@ Vue.component('product', {
                   :class="{ disabledButton: !inStock }">Add to Cart</button>
           <button @click="removeFromCart">Remove from Cart</button>
 
-          <div class="cart">
-            <p>Cart({{cart}})</p>
-          </div>
-
         </div>
 
       </div>
@@ -83,16 +81,15 @@ Vue.component('product', {
                     variantQuantity: 0
                 }
             ],
-            sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
-            cart: 0
+            sizes: ['S', 'M', 'L', 'XL', 'XXL', 'XXXL']
         }
     },
     methods: {
         addToCart() {
-            this.cart += 1
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].variantId)
         },
         removeFromCart() {
-            this.cart -= 1
+            this.$emit('remove-from-cart', this.variants[this.selectedVariant].variantId)
         },
         updateProduct(index) {
             this.selectedVariant = index
@@ -124,9 +121,22 @@ Vue.component('product', {
         }
     }
 })
+
 var app = new Vue({
     el: '#app',
     data: {
-        premium: false
+        premium: false,
+        cart: []
+    },
+    methods: {
+        updateCart(id) {
+            this.cart.push(id)
+        },
+        removeItem(id) {
+            var index = this.cart.indexOf(id)
+            if (index > -1) {
+                this.cart.splice(index, 1)
+            }
+        }
     }
 })
