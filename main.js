@@ -1,5 +1,7 @@
 Vue.config.devtools = true
 
+var eventBus = new Vue()
+
 Vue.component('product-details', {
     props: {
         details: {
@@ -33,14 +35,8 @@ Vue.component('product', {
           <p v-if="inventory > 10">In Stock</p>
           <p v-else-if="inventory<=10 && inventory > 0">Almost out of Stock</p>
           <p v-else :class="{ outOfStock: !inStock }">Out of Stock</p>
-          <p>Shipping: {{ shipping}}</p>
-          <p>{{ sale }}</p>
 
-          <product-details :details="details"></product-details>
-
-          <ul>
-            <li v-for="size in sizes">{{ size }}</li>
-          </ul>
+          <info-tabs :shipping="shipping" :details="details"></info-tabs>
 
           <div v-for="(variant, index) in variants"
                :key="variant.variantId"
@@ -56,17 +52,7 @@ Vue.component('product', {
 
         </div>
 
-          <div>
-              <p v-if="!reviews.length">There are no reviews yet.</p>
-              <ul v-else>
-                  <li v-for="(review, index) in reviews" :key="index">
-                    <p>{{ review.name }}</p>
-                    <p>Rating:{{ review.rating }}</p>
-                    <p>{{ review.review }}</p>
-                  </li>
-              </ul>
-          </div>
-        <product-review @review-submitted="addReview"></product-review>
+        <product-tabs :reviews="reviews"></product-tabs>
 
       </div>
 `,
@@ -136,6 +122,55 @@ Vue.component('product', {
             }
             return "$2.99"
         }
+    },
+    mounted() {
+        eventBus.$on('review-submitted', productReview => {
+          this.reviews.push(productReview)
+        })
+    }
+})
+
+Vue.component('product-tabs', {
+    props: {
+      reviews: {
+        type: Array,
+        required: false
+      }
+    },
+    template: `
+      <div>
+
+        <div>
+          <span class="tabs"
+                :class="{ activeTab: selectedTab === tab }"
+                v-for="(tab, index) in tabs"
+                :key="index"
+                @click="selectedTab = tab"
+          >{{ tab }}</span>
+        </div>
+
+        <div v-show="selectedTab === 'Reviews'">
+            <p v-if="!reviews.length">There are no reviews yet.</p>
+            <ul v-else>
+                <li v-for="review in reviews">
+                  <p>{{ review.name }}</p>
+                  <p>Rating:{{ review.rating }}</p>
+                  <p>{{ review.review }}</p>
+                </li>
+            </ul>
+        </div>
+
+        <div v-show="selectedTab === 'Make a Review'">
+          <product-review></product-review>
+        </div>
+
+      </div>
+    `,
+    data() {
+      return {
+        tabs: ['Reviews', 'Make a Review'],
+        selectedTab: 'Reviews'
+      }
     }
 })
 
@@ -206,7 +241,7 @@ Vue.component('product-review', {
                     rating: this.rating,
                     recommend: this.recommend,
                 }
-                this.$emit('review-submitted', productReview)
+                eventBus.$emit('review-submitted', productReview)
                 this.name = null
                 this.review = null
                 this.rating = null
@@ -218,6 +253,48 @@ Vue.component('product-review', {
                 if(!this.recommend) this.errors.push("Recommend required.")
             }
         }
+    }
+})
+
+Vue.component('info-tabs', {
+    props: {
+      shipping: {
+        required: true
+      },
+      details: {
+        type: Array,
+        required: true
+      }
+    },
+    template: `
+      <div>
+
+        <ul>
+          <span class="tabs"
+                :class="{ activeTab: selectedTab === tab }"
+                v-for="(tab, index) in tabs"
+                @click="selectedTab = tab"
+                :key="tab"
+          >{{ tab }}</span>
+        </ul>
+
+        <div v-show="selectedTab === 'Shipping'">
+          <p>{{ shipping }}</p>
+        </div>
+
+        <div v-show="selectedTab === 'Details'">
+          <ul>
+            <li v-for="detail in details">{{ detail }}</li>
+          </ul>
+        </div>
+
+      </div>
+    `,
+    data() {
+      return {
+        tabs: ['Shipping', 'Details'],
+        selectedTab: 'Shipping'
+      }
     }
 })
 
