@@ -2,3 +2,5 @@
 yarn.lock
 yarn-error.log
 .dir-locals.el
+/**/documents
+.DS_Store
