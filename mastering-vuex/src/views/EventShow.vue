@@ -31,6 +31,7 @@
     </ul>
   </div>
 </template>
+
 <script>
 import { mapState, mapActions } from 'vuex'
 
@@ -45,6 +46,7 @@ export default {
   methods: mapActions('event', ['fetchEvent'])
 }
 </script>
+
 <style scoped>
 .location {
   margin-bottom: 0;
