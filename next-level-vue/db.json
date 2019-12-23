@@ -303,6 +303,42 @@
       "date": "",
       "time": "",
       "attendees": []
+    },
+    {
+      "id": 5972125,
+      "user": {
+        "id": "abc123",
+        "name": "Adam"
+      },
+      "category": "animal welfare",
+      "organizer": {
+        "id": "abc123",
+        "name": "Adam"
+      },
+      "title": "Puppy Party",
+      "description": "Party",
+      "location": "House",
+      "date": "2019-12-05T05:36:00.000Z",
+      "time": "3:00",
+      "attendees": []
+    },
+    {
+      "id": 4698433,
+      "user": {
+        "id": "abc123",
+        "name": "Adam"
+      },
+      "category": "animal welfare",
+      "organizer": {
+        "id": "abc123",
+        "name": "Adam"
+      },
+      "title": "Puppy Party",
+      "description": "Puppy Party",
+      "location": "Puppy Palace",
+      "date": "",
+      "time": "",
+      "attendees": []
     }
   ]
 }
