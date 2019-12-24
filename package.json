@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "vue-language-server": "^0.0.65"
+  }
+}
